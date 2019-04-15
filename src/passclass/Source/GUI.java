@@ -155,7 +155,7 @@ public class GUI extends javax.swing.JFrame {
 
     private void saveFile1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveFile1ActionPerformed
         // TODO add your handling code here:
-        studata = (StuData) readUserDataFromFile();
+        studata = (StuData) readDataFromFile();
             DefaultTableModel model = (DefaultTableModel) table1.getModel();
             model.getDataVector().removeAllElements();
             model.fireTableDataChanged();
@@ -170,7 +170,7 @@ public class GUI extends javax.swing.JFrame {
        writeObjectToFile(studata.data);
     }//GEN-LAST:event_saveFile1ActionPerformed
 
-    private List<StuData> readUserDataFromFile() {
+    private List<StuData> readDataFromFile() {
             String filePath = "D:\\UserData.bin";
             try {
                 FileInputStream file = new FileInputStream(filePath);
