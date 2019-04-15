@@ -5,14 +5,19 @@
  */
 package passclass.Source;
 
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author USER
  */
 public class GUI extends javax.swing.JFrame {
+    StuData studata;
 
     /**
      * Creates new form GUI
@@ -148,16 +153,43 @@ public class GUI extends javax.swing.JFrame {
 
     private void saveFile1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveFile1ActionPerformed
         // TODO add your handling code here:
-        
-        
+//        UserList = readUserDataFromFile();
+            DefaultTableModel model = (DefaultTableModel) table1.getModel();
+            model.getDataVector().removeAllElements();
+            model.fireTableDataChanged();
+
+//            for (StuData u : studata.data) {
+//                model.addRow(new Object[0]);
+//                model.setValueAt(u.getName(), model.getRowCount() - 1, 0);
+//                model.setValueAt(u.getStuCode(), model.getRowCount() - 1, 1);
+//                model.setValueAt(u.getGrade(), model.getRowCount() - 1, 2);
+//                model.setValueAt(u.getTypeClass(), model.getRowCount() - 1, 3);
+//            }
+       writeObjectToFile(studata.data);
     }//GEN-LAST:event_saveFile1ActionPerformed
 
+    private boolean writeObjectToFile(List<String> pListData) {
+            String filePath = "D:\\UserData.bin";
+            try {
+                FileOutputStream file = new FileOutputStream(filePath);
+                ObjectOutputStream write = new ObjectOutputStream(file);
+
+                write.writeObject(pListData);
+
+                write.close();
+                file.close();
+                return true;
+            } catch (Exception ex) {
+                System.err.println("fail to write " + filePath + ", " + ex);
+                return false;
+            }
+        }
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
         JFrame j = new JFrame("GUI");
-        j.setContentPane(new GUI());
+        j.setContentPane(new GUI().jScrollPane1);
         j.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         j.setVisible(true);
         j.pack();
