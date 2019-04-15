@@ -5,7 +5,9 @@
  */
 package passclass.Source;
 
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
@@ -153,7 +155,7 @@ public class GUI extends javax.swing.JFrame {
 
     private void saveFile1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveFile1ActionPerformed
         // TODO add your handling code here:
-//        UserList = readUserDataFromFile();
+        studata = (StuData) readUserDataFromFile();
             DefaultTableModel model = (DefaultTableModel) table1.getModel();
             model.getDataVector().removeAllElements();
             model.fireTableDataChanged();
@@ -168,6 +170,26 @@ public class GUI extends javax.swing.JFrame {
        writeObjectToFile(studata.data);
     }//GEN-LAST:event_saveFile1ActionPerformed
 
+    private List<StuData> readUserDataFromFile() {
+            String filePath = "D:\\UserData.bin";
+            try {
+                FileInputStream file = new FileInputStream(filePath);
+                ObjectInputStream reader = new ObjectInputStream(file);
+                while (true) {
+                    try {
+                        List<StuData> obj = (List<StuData>) reader.readObject();
+                        return obj;
+                    } catch (Exception ex) {
+                        System.err.println("end of reader file ");
+                        break;
+                    }
+                }
+            } catch (Exception ex) {
+                System.err.println("failed to read " + filePath + ", " + ex);
+            }
+            return null;
+        }
+    
     private boolean writeObjectToFile(List<String> pListData) {
             String filePath = "D:\\UserData.bin";
             try {
