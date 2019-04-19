@@ -9,6 +9,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 import java.util.List;
@@ -20,6 +21,7 @@ import javax.swing.table.DefaultTableModel;
  */
 public class GUI extends javax.swing.JFrame {
     StuData studata;
+    GenStuData genstudata;
 
     /**
      * Creates new form GUI
@@ -151,70 +153,65 @@ public class GUI extends javax.swing.JFrame {
 
     private void loadFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadFileActionPerformed
         // TODO add your handling code here:
+        GenStuData.gendata = readDataFromFile();
+            DefaultTableModel model = (DefaultTableModel)table1.getModel();
+            model.getDataVector().removeAllElements();
+            model.fireTableDataChanged();
+
+            for (GenStuData g : GenStuData.gendata) {
+                model.addRow(new Object[0]);
+                model.setValueAt(g.getName(), model.getRowCount() - 1, 0);
+                model.setValueAt(g.getStuCode(), model.getRowCount() - 1, 1);
+                model.setValueAt(g.getGrade(), model.getRowCount() - 1, 2);
+                model.setValueAt(g.getTypeClass(), model.getRowCount() - 1, 3);
+            }
     }//GEN-LAST:event_loadFileActionPerformed
 
     private void saveFile1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveFile1ActionPerformed
         // TODO add your handling code here:
-        studata = (StuData) readDataFromFile();
-            DefaultTableModel model = (DefaultTableModel) table1.getModel();
-            model.getDataVector().removeAllElements();
-            model.fireTableDataChanged();
-
-//            for (StuData u : studata.data) {
-//                model.addRow(new Object[0]);
-//                model.setValueAt(u.getName(), model.getRowCount() - 1, 0);
-//                model.setValueAt(u.getStuCode(), model.getRowCount() - 1, 1);
-//                model.setValueAt(u.getGrade(), model.getRowCount() - 1, 2);
-//                model.setValueAt(u.getTypeClass(), model.getRowCount() - 1, 3);
-//            }
        writeObjectToFile(studata.data);
     }//GEN-LAST:event_saveFile1ActionPerformed
 
-    private List<StuData> readDataFromFile() {
+    private List<GenStuData> readDataFromFile() {
             String filePath = "D:\\UserData.bin";
-            try {
-                FileInputStream file = new FileInputStream(filePath);
-                ObjectInputStream reader = new ObjectInputStream(file);
-                while (true) {
-                    try {
-                        List<StuData> obj = (List<StuData>) reader.readObject();
-                        return obj;
-                    } catch (Exception ex) {
-                        System.err.println("end of reader file ");
-                        break;
-                    }
+        try{
+            FileInputStream file = new FileInputStream(filePath);
+            ObjectInputStream reader = new ObjectInputStream(file);
+            while(true){
+                try{
+                    List<GenStuData> obj = (List<GenStuData>)reader.readObject();
+                    return obj;
+                } catch(Exception ex){
+                    System.err.println("end of reader file ");
+                    break;
                 }
-            } catch (Exception ex) {
-                System.err.println("failed to read " + filePath + ", " + ex);
             }
-            return null;
+        }catch (Exception ex){
+            System.err.println("failed to read "+filePath+", "+ex);
+        }
+        return null;
         }
     
     private boolean writeObjectToFile(List<String> pListData) {
-            String filePath = "D:\\UserData.bin";
-            try {
-                FileOutputStream file = new FileOutputStream(filePath);
-                ObjectOutputStream write = new ObjectOutputStream(file);
-
-                write.writeObject(pListData);
-
-                write.close();
-                file.close();
-                return true;
-            } catch (Exception ex) {
-                System.err.println("fail to write " + filePath + ", " + ex);
-                return false;
-            }
+            String filePath="D:\\UserData.bin";
+        try{
+            FileOutputStream file = new FileOutputStream(filePath);
+            ObjectOutputStream write = new ObjectOutputStream(file);
+            
+            write.writeObject(pListData);
+            
+            write.close();
+            file.close();
+            return true;
+        } catch (Exception ex) {
+            System.err.println("fail to write "+filePath+", "+ex);
+            return false;
+        }
         }
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        JFrame j = new JFrame("GUI");
-        j.setContentPane(new GUI().jScrollPane1);
-        j.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        j.setVisible(true);
-        j.pack();
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
